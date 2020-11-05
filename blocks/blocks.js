@@ -87,11 +87,11 @@ Blockly.defineBlocksWithJsonArray([
       "options": [
         [
           "x",
-          "\"x\""
+          "0"
         ],
         [
           "y",
-          "\"y\""
+          "1"
         ]
       ]
     }
@@ -116,11 +116,11 @@ Blockly.defineBlocksWithJsonArray([
       "options": [
         [
           "width",
-          "\"x\""
+          "0"
         ],
         [
           "height",
-          "\"y\""
+          "1"
         ]
       ]
     }

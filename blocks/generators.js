@@ -17,7 +17,7 @@ Blockly.Python['huskylens_mode'] = function(block) {
 
   var dropdown_algorithm = block.getFieldValue('algorithm');
 
-  var code = `HUSKYLENS.setAlgorithm(${dropdown_algorithm})\n`;
+  var code = `HUSKYLENS.setAlgorithm(HUSKYLENS.${dropdown_algorithm})\n`;
   return code;
 };
 
@@ -42,7 +42,7 @@ Blockly.Python['huskylens_block_get_pos'] = function(block) {
 
 Blockly.Python['huskylens_block_get_size'] = function(block) {
   Blockly.Python.definitions_['import_HUSKYLENS'] = 'import HUSKYLENS';
-  
+
   var value_id = Blockly.Python.valueToCode(block, 'id', Blockly.Python.ORDER_ATOMIC);
   var dropdown_val = block.getFieldValue('val');
 
