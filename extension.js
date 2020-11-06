@@ -43,5 +43,7 @@
               </block>
               `
         },
+        "huskylens_arrow_is_ready",
+        "huskylens_arrow_get_pos"
     ]
 });

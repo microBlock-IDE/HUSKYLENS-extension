@@ -129,5 +129,45 @@ Blockly.defineBlocksWithJsonArray([
   "colour": "#17202A",
   "tooltip": "",
   "helpUrl": ""
+},
+{
+  "type": "huskylens_arrow_is_ready",
+  "message0": "HUSKYLENS arrow is ready ?",
+  "output": null,
+  "colour": "#17202A",
+  "tooltip": "",
+  "helpUrl": ""
+},
+{
+  "type": "huskylens_arrow_get_pos",
+  "message0": "HUSKYLENS arrow get position %1",
+  "args0": [
+    {
+      "type": "field_dropdown",
+      "name": "axis",
+      "options": [
+        [
+          "x arrowhead",
+          "2"
+        ],
+        [
+          "y arrowhead",
+          "3"
+        ],
+        [
+          "x origin",
+          "0"
+        ],
+        [
+          "y origin",
+          "1"
+        ]
+      ]
+    }
+  ],
+  "output": null,
+  "colour": "#17202A",
+  "tooltip": "",
+  "helpUrl": ""
 }
 ]);

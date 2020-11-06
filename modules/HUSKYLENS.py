@@ -24,25 +24,33 @@ def isReady():
     try:
         i2c1.writeto(ADDRESS, COMMAND_REQUEST_KNOCK, len(COMMAND_REQUEST_KNOCK))
         res = i2c1.readfrom(ADDRESS, len(COMMAND_RETURN_OK))
-        return res == COMMAND_RETURN_OK
     except OSError:
         return False
+    return res == COMMAND_RETURN_OK
 
 def setAlgorithm(index):
     cmd = COMMAND_REQUEST_ALGORITHM + bytes([ index, 0, 0x3F + index ])
-    i2c1.writeto(ADDRESS, cmd, len(cmd))
-    res = i2c1.readfrom(ADDRESS, len(COMMAND_RETURN_OK))
+    try:
+        i2c1.writeto(ADDRESS, cmd, 8)
+        res = i2c1.readfrom(ADDRESS, len(COMMAND_RETURN_OK))
+    except OSError:
+        return False
     return res == COMMAND_RETURN_OK
 
 blocks = { }
+arrow = { }
 
 def b2i(x, y):
     return (x << 8) | y
 
 def readBlockInfo():
-    global blocks
-    data = i2c1.readfrom(ADDRESS, 16)
-    if data.index(START_CMD + b'\x0A\x2A') == 0:
+    global blocks, arrow
+    try:
+        data = i2c1.readfrom(ADDRESS, 16)
+    except OSError:
+        print("I2C error")
+        return False
+    if data[:5] == (START_CMD + b'\x0A\x2A'): # Block ?
         data = data[5:]
         index = b2i(data[9], data[8])
         blocks[index] = {
@@ -52,18 +60,34 @@ def readBlockInfo():
             "h": b2i(data[7], data[6])
         }
         return True
+    elif data[:5] == (START_CMD + b'\x0A\x2B'): # Arrow ?
+        data = data[5:]
+        index = b2i(data[9], data[8])
+        arrow[index] = {
+            "xs": b2i(data[1], data[0]),
+            "ys": b2i(data[3], data[2]),
+            "xe": b2i(data[5], data[4]),
+            "ye": b2i(data[7], data[6])
+        }
+        return True
     print("DATA ERROR")
     return False
 
 def update():
-    global blocks
-    i2c1.writeto(ADDRESS, COMMAND_REQUEST, len(COMMAND_REQUEST))
-    data = i2c1.readfrom(ADDRESS, 16)
-    if data.index(START_CMD + b'\x0A\x29') == 0:
+    global blocks, arrow
+    try:
+        i2c1.writeto(ADDRESS, COMMAND_REQUEST, len(COMMAND_REQUEST))
+        data = i2c1.readfrom(ADDRESS, 16)
+    except OSError:
+        print("I2C error")
+        return False
+    # print(data[:5])
+    if data[:5] == (START_CMD + b'\x0A\x29'):
         data = data[5:]
         blocksLen = int(data[0])
         learnedLen = int(data[2])
         blocks = { }
+        arrow = { }
         for i in range(blocksLen):
             readBlockInfo()
     else:
@@ -81,3 +105,15 @@ def blockGetSize(index):
     if not blockIsReady(index):
         return ( 0, 0 )
     return (blocks[index]["w"], blocks[index]["h"])
+
+def arrowIsReady():
+    return (0 in arrow) or (1 in arrow)
+
+def arrowGetPos():
+    if 0 in arrow:
+        index = 0
+    elif 1 in arrow:
+        index = 1
+    else:
+        return ( 0, 0, 0, 0 )
+    return (arrow[index]["xs"], arrow[index]["ys"], arrow[index]["xe"], arrow[index]["ye"])

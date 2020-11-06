@@ -49,3 +49,19 @@ Blockly.Python['huskylens_block_get_size'] = function(block) {
   var code = `HUSKYLENS.blockGetSize(${value_id})[${dropdown_val}]`;
   return [code, Blockly.Python.ORDER_NONE];
 };
+
+Blockly.Python['huskylens_arrow_is_ready'] = function(block) {
+  Blockly.Python.definitions_['import_HUSKYLENS'] = 'import HUSKYLENS';
+
+  var code = `HUSKYLENS.arrowIsReady()`;
+  return [code, Blockly.Python.ORDER_NONE];
+};
+
+Blockly.Python['huskylens_arrow_get_pos'] = function(block) {
+  Blockly.Python.definitions_['import_HUSKYLENS'] = 'import HUSKYLENS';
+
+  var dropdown_axis = block.getFieldValue('axis');
+
+  var code = `HUSKYLENS.arrowGetPos()[${dropdown_axis}]`;
+  return [code, Blockly.Python.ORDER_NONE];
+};
